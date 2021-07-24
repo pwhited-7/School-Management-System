@@ -7,6 +7,7 @@ import java.util.Scanner;
 public class School implements ListInterface{
     private static int  totalMoneyEarned = 0;
     private static int totalMoneySpent = 0;
+    private static int studentIdCounter = 0;
 
     Random rand = new Random();
     Scanner scnr = new Scanner(System.in);
@@ -127,16 +128,18 @@ public class School implements ListInterface{
     }
 
     public int assignStudentId(){
-        int id = rand.nextInt( 100) + 1;
-        for(Student a : studentsList){
-            int studentID = a.getId();
 
-            while(studentID == id) {
-                id = rand.nextInt(100) + 1;
-            }
-        }
-        System.out.println("The student has been giving the ID: " + id);
-        return id;
+        studentIdCounter += 1;
+       // int id = rand.nextInt( 100) + 1;
+//        for(Student a : studentsList){
+//            int studentID = a.getId();
+
+//            while(studentID == id) {
+//                id = rand.nextInt(100) + 1;
+//            }
+        //}
+        System.out.println("The student has been giving the ID: " + studentIdCounter);
+        return studentIdCounter;
     }
 
     public int correctGradeValue(){
@@ -185,7 +188,7 @@ public class School implements ListInterface{
     }
 
     public boolean stringVerification(String str){
-        boolean flag = false;
+        boolean flag;
         for (int i = 0; i < str.length(); i++){
             flag = Character.isDigit(str.charAt(i));
             if(flag){
@@ -398,6 +401,40 @@ public class School implements ListInterface{
     public void displaySchoolEarnings(){
         System.out.printf("The school has earned $%d\n", getTotalMoneyEarned());
     }
+
+    public void displayStudentInfo(){
+        //System.out.print("What is the student ID number? ");
+        int studentId = verifyIdIsInteger();
+        Student S = stud.getStudentById(studentId);
+        System.out.printf("%nStudent's Information:%n" +
+                          "Name: %s%n"+
+                          "Grade Level: %d%n"+
+                          "ID: %d%n"+
+                          "Fees Paid: $%d out of $%d%n", S.getName(), S.getGradeLevel(), S.getId(), S.getFeesPaid(), S.getFeesTotal());
+
+    }
+
+    public int verifyIdIsInteger(){
+        int n=0;
+        boolean flag;
+
+        do {
+            try {
+                Scanner sc = new Scanner(System.in);
+                System.out.print("What is the student ID number? ");
+                n=sc.nextInt();
+                flag=false;
+            }
+            catch(Exception e) {
+                // accept integer only.
+                System.out.println("This is not an accepted value.");
+                flag=true;
+            }
+        }
+        while(flag);
+        return n;
+    }
+
 
 
 

@@ -108,13 +108,23 @@ public class Student implements ListInterface{
 
         for(Student student : studentsList){
             if(student.getName().equalsIgnoreCase(studentName)){
-                Student S = student;
-                return S;
+
+                return student;
             }
             else
                 System.out.println("This student is not registered.");
         }
         return null;
+    }
+
+    public Student getStudentById(int id){
+        Student S = null;
+        for(Student student: studentsList){
+            if(id == student.getId()){
+                S = student;
+            }
+        }
+        return S;
     }
 
     /**

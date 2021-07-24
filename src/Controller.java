@@ -32,8 +32,11 @@ public class Controller extends School{
         else if(usersDecision.equalsIgnoreCase("remove teacher")){
             removeTeacher();
         }
-        else if (usersDecision.equalsIgnoreCase("help")){
+        else if (usersDecision.equalsIgnoreCase("help") || usersDecision.equalsIgnoreCase("h")){
             display.printHelpMenu();
+        }
+        else if(usersDecision.equalsIgnoreCase("find student")){
+            displayStudentInfo();
         }
         return false;
 
