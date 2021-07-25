@@ -40,6 +40,10 @@ public class Teacher implements ListInterface{
         this.salary=salary;
     }
 
+    public int getYearsExperience(){
+        return yearsExperience;
+    }
+
     /**
      * Adds  to salaryEarned.
      * Removes from the total money earned by the school.
@@ -94,6 +98,16 @@ public class Teacher implements ListInterface{
             }
         }
         return null;
+    }
+
+    public Teacher getTeacherById(int id){
+        Teacher T = null;
+        for(Teacher teacher: teachersList){
+            if(id == teacher.getId()){
+                T = teacher;
+            }
+        }
+        return T;
     }
 
 

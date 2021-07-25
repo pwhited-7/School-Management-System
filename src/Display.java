@@ -7,12 +7,14 @@ public class Display {
                 \tSCHOOL MANAGEMENT SYSTEM
                 Here are a few options to get started:
 
-                teacher or t - registers a new teacher
-                student or s - registers a new student
-                financials or f - pay student fees or access all school finances
-                remove student - removes a student
-                remove teacher - removes a teacher
-                exit or goodbye - leaves the School Management System
+                teacher or t     - registers a new teacher
+                student or s     - registers a new student
+                financials or f  - pay student fees or access all school finances
+                find student     - display all student info (by student ID)
+                find teacher     - display all teacher info (by teacher ID)
+                remove student   - removes a student
+                remove teacher   - removes a teacher
+                exit or goodbye  - leaves the School Management System
                 """);
 
     }
@@ -45,7 +47,8 @@ public class Display {
                         teacher or t    - registers a new teacher
                         student or s    - registers a new student
                         financials or f - pay student fees or access all school finances
-                        find student    - display all student info (by student ID)remove student  - removes a student
+                        find student    - display all student info (by student ID)
+                        remove student  - removes a student
                         remove teacher  - removes a teacher
                         exit or goodbye - leaves the School Management System
                         help or h       - shows your options if you forget

@@ -403,15 +403,35 @@ public class School implements ListInterface{
     }
 
     public void displayStudentInfo(){
-        //System.out.print("What is the student ID number? ");
+
         int studentId = verifyIdIsInteger();
         Student S = stud.getStudentById(studentId);
-        System.out.printf("%nStudent's Information:%n" +
-                          "Name: %s%n"+
-                          "Grade Level: %d%n"+
-                          "ID: %d%n"+
-                          "Fees Paid: $%d out of $%d%n", S.getName(), S.getGradeLevel(), S.getId(), S.getFeesPaid(), S.getFeesTotal());
+        if(S != null) {
+            System.out.printf("%nStudent's Information:%n" +
+                    "Name: %s%n" +
+                    "Grade Level: %d%n" +
+                    "ID: %d%n" +
+                    "Fees Paid: $%d out of $%d%n", S.getName(), S.getGradeLevel(), S.getId(), S.getFeesPaid(), S.getFeesTotal());
+        }
+        else{
+            System.out.println("There is no student with that ID.");
+        }
 
+    }
+
+    public void displayTeacherInfo(){
+        int teacherId = verifyIdIsInteger();
+        Teacher T = teach.getTeacherById(teacherId);
+        if(T != null){
+            System.out.printf("%nTeacher's Information:%n"+
+                              "Name: %s%n"+
+                              "Years of Experience: %d%n"+
+                              "ID: %d%n"+
+                              "Salary: $%d of $%d has been paid to %s", T.getName(), T.getYearsExperience(), T.getId(), T.getSalaryEarned(), T.getSalary(), T.getName());
+        }
+        else{
+            System.out.println("There is no teacher with that ID.");
+        }
     }
 
     public int verifyIdIsInteger(){
@@ -421,7 +441,7 @@ public class School implements ListInterface{
         do {
             try {
                 Scanner sc = new Scanner(System.in);
-                System.out.print("What is the student ID number? ");
+                System.out.print("What is the ID number? ");
                 n=sc.nextInt();
                 flag=false;
             }
