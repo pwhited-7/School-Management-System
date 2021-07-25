@@ -48,6 +48,7 @@ public class Display {
                         student or s    - registers a new student
                         financials or f - pay student fees or access all school finances
                         find student    - display all student info (by student ID)
+                        find teacher    - display all teacher info (by teacher ID)
                         remove student  - removes a student
                         remove teacher  - removes a teacher
                         exit or goodbye - leaves the School Management System
