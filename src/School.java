@@ -8,6 +8,7 @@ public class School implements ListInterface{
     private static int  totalMoneyEarned = 0;
     private static int totalMoneySpent = 0;
     private static int studentIdCounter = 0;
+    private static int teacherIdCounter = 0;
 
     Random rand = new Random();
     Scanner scnr = new Scanner(System.in);
@@ -202,16 +203,17 @@ public class School implements ListInterface{
     }
 
     public int assignTeacherId(){
-        int id = rand.nextInt( 100) + 1;
-        for(Teacher teacher : teachersList){
-            int teacherId = teacher.getId();
+        teacherIdCounter += 1;
+        // int id = rand.nextInt( 100) + 1;
+//        for(Student a : studentsList){
+//            int studentID = a.getId();
 
-            while(teacherId == id) {
-                id = rand.nextInt(100) + 1;
-            }
-        }
-        System.out.print("The teacher has been giving the ID: " + id);
-        return id;
+//            while(studentID == id) {
+//                id = rand.nextInt(100) + 1;
+//            }
+        //}
+        System.out.print("The teacher has been giving the ID: " + teacherIdCounter);
+        return teacherIdCounter;
 
     }
 
