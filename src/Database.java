@@ -69,7 +69,7 @@ public class Database {
         return 0;
     }
 
-    public void createTable(){
+    public void createStudentTable(){
 
         String table = "CREATE TABLE students(\n" +
                 "    studentId INT NOT NULL AUTO_INCREMENT,\n" +
@@ -87,6 +87,18 @@ public class Database {
             se.printStackTrace();
         }
 
+    }
+
+    public void updateStudentFeesPaid(int feesPaid, String student){
+        try {
+            String updateFees = String.format("UPDATE students \n" +
+                    "SET feesPaid = %d\n" +
+                    "WHERE name = \"%s\"", feesPaid, student);
+            establishConnection();
+            statement.executeUpdate(updateFees);
+        }catch (SQLException se){
+            se.printStackTrace();
+        }
     }
 
 

@@ -13,7 +13,9 @@ public class Student implements ListInterface{
     private int gradeLevel;
     private int feesPaid;
     private int feesTotal;
-    //public List<Student> students = new ArrayList<Student>(100);
+    Database database = new Database();
+    //public List<Student> students = new
+    //ArrayList<Student>(100);
    // School school = new School();
 
 
@@ -49,8 +51,11 @@ public class Student implements ListInterface{
 
     public void payFees(int fees){
         feesPaid += fees;
+        database.updateStudentFeesPaid(feesPaid, this.name);
         School.updateTotalMoneyEarned(feesPaid);
     }
+
+
 
     public void checkIfFeesOverPaid(Student S){
         if(S.getFeesPaid() == 5000){
