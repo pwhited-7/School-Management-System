@@ -22,7 +22,7 @@ public class Student implements ListInterface{
      * Fees for every student is $5,000.00
      * Fees paid initially is $0.00
      *
-     * @param id id for the student
+     //* @param id id for the student
      * @param name name of the student
      * @param gradeLevel grade level of the student (1-12)
      */
@@ -41,6 +41,10 @@ public class Student implements ListInterface{
 
     public void setGradeLevel(int gradeLevel) {
         this.gradeLevel = gradeLevel;
+    }
+
+    public void setId(int id){
+        this.id = id;
     }
 
     public void payFees(int fees){
@@ -140,12 +144,12 @@ public class Student implements ListInterface{
     }
 
     public static void main(String[] args) {
-        Student S = new Student(4, "Pacen", 5);
-        Student S1 = new Student(5, "John", 6);
+       // Student S = new Student(4, "Pacen", 5);
+       // Student S1 = new Student(5, "John", 6);
         School sch = new School();
-        sch.addStudent(S);
-        sch.addStudent(S1);
-        sch.getStudents();
+//        sch.addStudent(S);
+//        sch.addStudent(S1);
+//        sch.getStudents();
 
 
         //System.out.println(S);

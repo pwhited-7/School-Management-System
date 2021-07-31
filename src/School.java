@@ -1,6 +1,9 @@
+import java.sql.SQLException;
 import java.sql.SQLOutput;
+import java.sql.SQLSyntaxErrorException;
 import java.util.ArrayList;
 import java.util.List;
+import java.lang.*;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -14,6 +17,7 @@ public class School implements ListInterface{
     Scanner scnr = new Scanner(System.in);
     Teacher teach = new Teacher();
     Student stud = new Student();
+    Database database = new Database();
 
 //    List<Student> studentsList = new ArrayList<>();
 //    List<Teacher> teachersList = new ArrayList<>();
@@ -99,7 +103,7 @@ public class School implements ListInterface{
         totalMoneyEarned-=moneySpent;
     }
 
-    public void createStudent(){
+    public void createStudent()  {
 
         //Getting Name of Student
         System.out.print("Student Full Name: ");
@@ -118,29 +122,22 @@ public class School implements ListInterface{
                 gradeLevel = correctGradeValue();
             }
         }
+        database.insertIntoTable("students", studentName, gradeLevel, 0, 5000);
 
-        //Assign id to student
-        int id = assignStudentId();
+        //Assign student ID which is created automatically by database
+        int id = assignStudentId(studentName);
 
         Student S = new Student(id, studentName, gradeLevel);
         addStudent(S);
 
-
     }
 
-    public int assignStudentId(){
+    public int assignStudentId(String studentName){
 
-        studentIdCounter += 1;
-       // int id = rand.nextInt( 100) + 1;
-//        for(Student a : studentsList){
-//            int studentID = a.getId();
+        int id = database.getId(studentName);
 
-//            while(studentID == id) {
-//                id = rand.nextInt(100) + 1;
-//            }
-        //}
-        System.out.println("The student has been giving the ID: " + studentIdCounter);
-        return studentIdCounter;
+        System.out.println("The student has been giving the ID: " + id);
+        return id;
     }
 
     public int correctGradeValue(){

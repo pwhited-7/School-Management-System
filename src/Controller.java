@@ -1,3 +1,5 @@
+import java.sql.SQLException;
+import java.sql.SQLSyntaxErrorException;
 import java.util.*;
 
 public class Controller extends School{
@@ -17,7 +19,7 @@ public class Controller extends School{
             createTeacher();
         }
         else if (usersDecision.equalsIgnoreCase("s") || usersDecision.equalsIgnoreCase("student")){
-            createStudent();
+                createStudent();
         }
         else if(usersDecision.equalsIgnoreCase("exit") || usersDecision.equalsIgnoreCase("goodbye")){
             return display.exit();
