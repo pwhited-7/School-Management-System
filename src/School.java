@@ -454,6 +454,14 @@ public class School implements ListInterface{
         return n;
     }
 
+    public void displayDatabase(){
+        System.out.print("Which database would you like to see? (students or teachers) ");
+        String studentOrTeacher = scnr.nextLine();
+        System.out.println();
+        if(!stringVerification(studentOrTeacher)) {
+            database.displayTable(studentOrTeacher);
+        }
+    }
 
 
 

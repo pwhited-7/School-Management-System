@@ -43,6 +43,9 @@ public class Controller extends School{
         else if(usersDecision.equalsIgnoreCase("find teacher")){
             displayTeacherInfo();
         }
+        else if(usersDecision.equalsIgnoreCase("database") || usersDecision.equalsIgnoreCase("d")){
+            displayDatabase();
+        }
         return false;
 
     }

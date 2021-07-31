@@ -1,10 +1,12 @@
 import javax.xml.crypto.Data;
 import java.sql.*;
 
+
 public class Database {
 
     private Connection connection = null;
     private Statement statement = null;
+    //DBTablePrinter tablePrinter = new DBTablePrinter();
 
     public void establishConnection() {
 
@@ -101,29 +103,42 @@ public class Database {
         }
     }
 
+    public void displayTable(String str){
+        DBTablePrinter tablePrinter = new DBTablePrinter();
+        establishConnection();
+        if(str.equalsIgnoreCase("students")){
+            tablePrinter.printTable(connection, "students");
+        }
+        else if (str.equalsIgnoreCase("teachers")){
+            tablePrinter.printTable(connection, "teachers");
+        }
+
+    }
+
 
     public static void main(String[] args) {
 
         Database data = new Database();
-
+        DBTablePrinter tablePrinter = new DBTablePrinter();
        // data.insertIntoTable("students", "John", 7, 0 ,5000);
 
-        //data.establishConnection();
-//        try {
-//            ResultSet resultSet = data.statement.executeQuery("SELECT * FROM students");
-//            int id = 0;
+        data.establishConnection();
+        try {
+            ResultSet resultSet = data.statement.executeQuery("SELECT * FROM students");
+            data.displayTable("teachers");
+            //tablePrinter.printTable(data.connection, "students");
+//            int id;
 //            while (resultSet.next()){
-//                if(resultSet.getString("name").equals("Katlyn")){
-//                    id = resultSet.getInt("studentId");
-//                }
+//                id = resultSet.getInt("studentId");
+//                System.out.printf("%d", id);
 //
 //               // System.out.println(resultSet.getString("name"));
 //            }
-//
-//            System.out.println(id);
-//        }catch (SQLException se){
-//            se.printStackTrace();
-//        }
+
+//            System.out.println(resultSet);
+        }catch (SQLException se){
+            se.printStackTrace();
+        }
         //System.out.println(data.getId("Katlyn"));
 
         //data.createTable();
