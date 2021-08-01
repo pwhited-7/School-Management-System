@@ -11,7 +11,7 @@ public class Database {
     public void establishConnection() {
 
         try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/School_Database", "root", "rootpassword");
+            connection = DriverManager.getConnection("jdbc:mysql://34.106.53.84:3306/school_database", "root", "N43FbN0gADAyIa6k");
 
             statement = connection.createStatement();
         } catch (SQLException se) {
@@ -125,7 +125,7 @@ public class Database {
         data.establishConnection();
         try {
             ResultSet resultSet = data.statement.executeQuery("SELECT * FROM students");
-            data.displayTable("teachers");
+            data.displayTable("students");
             //tablePrinter.printTable(data.connection, "students");
 //            int id;
 //            while (resultSet.next()){
