@@ -4,9 +4,19 @@ import java.sql.*;
 
 public class Database {
 
-    private Connection connection = null;
-    private Statement statement = null;
+    public Connection connection = null;
+    public Statement statement = null;
     //DBTablePrinter tablePrinter = new DBTablePrinter();
+
+    public Database(){
+        try {
+            connection = DriverManager.getConnection("jdbc:mysql://34.106.53.84:3306/school_database", "root", "N43FbN0gADAyIa6k");
+
+            statement = connection.createStatement();
+        } catch (SQLException se) {
+            se.printStackTrace();
+        }
+    }
 
     public void establishConnection() {
 
@@ -22,7 +32,7 @@ public class Database {
     public void insertIntoStudentsTable(String table, String name, int gradeLevel, int feesPaid, int feesTotal ) {
 
         try{
-            establishConnection();
+
             String dataToInsert = String.format("INSERT INTO %s(name, gradeLevel, feesPaid, feesTotal) VALUES(\"%s\", %d, %d, %d)", table, name, gradeLevel, feesPaid, feesTotal);
             statement.executeUpdate(dataToInsert);
             System.out.printf("%s has been added to the database.\n", name);
@@ -31,27 +41,13 @@ public class Database {
             se.printStackTrace();
         }catch (Exception e){
             e.printStackTrace();
-        }finally {
-            try{
-                if (statement != null)
-                    connection.close();
-            }catch (SQLException se){
-
-            }
-            try{
-                if (connection != null){
-                    connection.close();
-                }
-            }catch (SQLException se){
-                se.printStackTrace();
-            }
         }
     }
 
     public void insertIntoTeachersTable(String table, String name, int yearsExperience, int salaryEarned, int salary ) {
 
         try{
-            establishConnection();
+
             String dataToInsert = String.format("INSERT INTO %s(name, yearsExperience, salaryEarned, salary) VALUES(\"%s\", %d, %d, %d)",
                     table,
                     name,
@@ -70,7 +66,7 @@ public class Database {
     public int getId(String name, String table) {
 
         try {
-            establishConnection();
+
             ResultSet resultSet = statement.executeQuery("SELECT * FROM "+table);
             int id = 0;
             while (resultSet.next()) {
@@ -91,6 +87,7 @@ public class Database {
 
     public void createStudentTable(){
 
+
         String table = "CREATE TABLE students(\n" +
                 "    studentId INT NOT NULL AUTO_INCREMENT,\n" +
                 "    name VARCHAR(40),\n" +
@@ -100,7 +97,7 @@ public class Database {
                 "    PRIMARY KEY(studentId)\n" +
                 ")";
         try {
-            establishConnection();
+
             statement.executeUpdate(table);
 
         }catch (SQLException se){
@@ -110,11 +107,12 @@ public class Database {
     }
 
     public void updateStudentFeesPaid(int feesPaid, String student){
+
         try {
             String updateFees = String.format("UPDATE students \n" +
                     "SET feesPaid = %d\n" +
                     "WHERE name = \"%s\"", feesPaid, student);
-            establishConnection();
+
             statement.executeUpdate(updateFees);
         }catch (SQLException se){
             se.printStackTrace();
@@ -123,7 +121,7 @@ public class Database {
 
     public void displayTable(String str){
         DBTablePrinter tablePrinter = new DBTablePrinter();
-        establishConnection();
+
         if(str.equalsIgnoreCase("students")){
             tablePrinter.printTable(connection, "students");
         }

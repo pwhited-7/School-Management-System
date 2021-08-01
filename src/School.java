@@ -1,3 +1,4 @@
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLOutput;
 import java.sql.SQLSyntaxErrorException;
@@ -412,33 +413,78 @@ public class School implements ListInterface{
     public void displayStudentInfo(){
 
         int studentId = verifyIdIsInteger();
-        Student S = stud.getStudentById(studentId);
-        if(S != null) {
-            System.out.printf("%nStudent's Information:%n" +
-                    "Name: %s%n" +
-                    "Grade Level: %d%n" +
-                    "ID: %d%n" +
-                    "Fees Paid: $%d out of $%d%n", S.getName(), S.getGradeLevel(), S.getId(), S.getFeesPaid(), S.getFeesTotal());
-        }
-        else{
-            System.out.println("There is no student with that ID.");
-        }
+        try {
+            ResultSet resultSet = database.statement.executeQuery("SELECT * FROM students");
 
+            String name;
+            int gradeLevel;
+            int id;
+            int feesPaid;
+            int feesTotal;
+            while (resultSet.next()){
+                if(studentId == resultSet.getInt("studentId")){
+                    name = resultSet.getString("name");
+                    gradeLevel = resultSet.getInt("gradeLevel");
+                    id = resultSet.getInt("studentId");
+                    feesPaid = resultSet.getInt("feesPaid");
+                    feesTotal = resultSet.getInt("feesTotal");
+
+                    System.out.printf("%nStudent's Information:%n" +
+                            "Name: %s%n" +
+                            "Grade Level: %d%n" +
+                            "ID: %d%n" +
+                            "Fees Paid: $%d out of $%d%n", name, gradeLevel, id, feesPaid, feesTotal);
+                }
+            }
+
+        }catch (SQLException se){
+            se.printStackTrace();
+        }
     }
 
     public void displayTeacherInfo(){
         int teacherId = verifyIdIsInteger();
-        Teacher T = teach.getTeacherById(teacherId);
-        if(T != null){
-            System.out.printf("%nTeacher's Information:%n"+
-                              "Name: %s%n"+
-                              "Years of Experience: %d%n"+
-                              "ID: %d%n"+
-                              "Salary: $%d of $%d has been paid to %s", T.getName(), T.getYearsExperience(), T.getId(), T.getSalaryEarned(), T.getSalary(), T.getName());
+
+        try {
+            ResultSet resultSet = database.statement.executeQuery("SELECT * FROM teachers");
+
+            String name;
+            int yearsExperience;
+            int id;
+            int salary;
+            int salaryEarned;
+
+            while (resultSet.next()){
+                if(teacherId == resultSet.getInt("teacherId")){
+                    name = resultSet.getString("name");
+                    yearsExperience = resultSet.getInt("yearsExperience");
+                    id = resultSet.getInt("teacherId");
+                    salaryEarned = resultSet.getInt("salaryEarned");
+                    salary = resultSet.getInt("salary");
+
+                    System.out.printf("%nTeacher's Information:%n" +
+                            "Name: %s%n" +
+                            "Year's Experience: %d%n" +
+                            "ID: %d%n" +
+                            "Salary: $%d of $%d has been paid to %s%n", name, yearsExperience, id, salaryEarned, salary, name);
+                }
+            }
+
+        }catch (SQLException se){
+            se.printStackTrace();
         }
-        else{
-            System.out.println("There is no teacher with that ID.");
-        }
+
+//        Teacher T = teach.getTeacherById(teacherId);
+//        if(T != null){
+//            System.out.printf("%nTeacher's Information:%n"+
+//                              "Name: %s%n"+
+//                              "Years of Experience: %d%n"+
+//                              "ID: %d%n"+
+//                              "Salary: $%d of $%d has been paid to %s", T.getName(), T.getYearsExperience(), T.getId(), T.getSalaryEarned(), T.getSalary(), T.getName());
+//        }
+//        else{
+//            System.out.println("There is no teacher with that ID.");
+//        }
     }
 
     public int verifyIdIsInteger(){
