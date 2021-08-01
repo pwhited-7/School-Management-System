@@ -122,7 +122,7 @@ public class School implements ListInterface{
                 gradeLevel = correctGradeValue();
             }
         }
-        database.insertIntoTable("students", studentName, gradeLevel, 0, 5000);
+        database.insertIntoStudentsTable("students", studentName, gradeLevel, 0, 5000);
 
         //Assign student ID which is created automatically by database
         int id = assignStudentId(studentName);
@@ -134,9 +134,15 @@ public class School implements ListInterface{
 
     public int assignStudentId(String studentName){
 
-        int id = database.getId(studentName);
+        int id = database.getId(studentName, "students");
 
         System.out.println("The student has been giving the ID: " + id);
+        return id;
+    }
+
+    public int assignTeacherId(String teacherName){
+        int id = database.getId(teacherName, "teachers");
+        System.out.println("The teacher has been given the ID: "+id);
         return id;
     }
 
@@ -175,8 +181,10 @@ public class School implements ListInterface{
         int salary = teach.salaryNegotiation(yearsExperience);
         System.out.println("Yearly salary is $" + salary);
 
+        database.insertIntoTeachersTable("teachers", teacherName, yearsExperience, 0, salary);
+
         //Assign id to Teacher
-        int id = assignTeacherId();
+        int id = assignTeacherId(teacherName);
         System.out.println();
 
         Teacher T = new Teacher(id, teacherName, yearsExperience);

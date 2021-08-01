@@ -19,14 +19,11 @@ public class Database {
         }
     }
 
-    public void insertIntoTable(String table, String name, int gradeLevel, int feesPaid, int feesTotal ) {
+    public void insertIntoStudentsTable(String table, String name, int gradeLevel, int feesPaid, int feesTotal ) {
 
         try{
-
             establishConnection();
-
             String dataToInsert = String.format("INSERT INTO %s(name, gradeLevel, feesPaid, feesTotal) VALUES(\"%s\", %d, %d, %d)", table, name, gradeLevel, feesPaid, feesTotal);
-
             statement.executeUpdate(dataToInsert);
             System.out.printf("%s has been added to the database.\n", name);
 
@@ -51,20 +48,41 @@ public class Database {
         }
     }
 
-    public int getId(String studentName) {
+    public void insertIntoTeachersTable(String table, String name, int yearsExperience, int salaryEarned, int salary ) {
+
+        try{
+            establishConnection();
+            String dataToInsert = String.format("INSERT INTO %s(name, yearsExperience, salaryEarned, salary) VALUES(\"%s\", %d, %d, %d)",
+                    table,
+                    name,
+                    yearsExperience,
+                    salaryEarned,
+                    salary);
+
+            statement.executeUpdate(dataToInsert);
+            System.out.printf("%s has been added to the database.\n", name);
+
+        }catch (SQLException se){
+            se.printStackTrace();
+        }
+    }
+
+    public int getId(String name, String table) {
 
         try {
             establishConnection();
-            //String sql = "SELECT FROM * students"
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM students");
-            int studentId = 0;
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM "+table);
+            int id = 0;
             while (resultSet.next()) {
-                if (resultSet.getString("name").equalsIgnoreCase(studentName)) {
-                    studentId = resultSet.getInt("studentId");
+                if (resultSet.getString("name").equalsIgnoreCase(name)) {
+                    if(table.equals("students"))
+                        id = resultSet.getInt("studentId");
+                    else if(table.equals("teachers"))
+                        id = resultSet.getInt("teacherId");
                 }
             }
 
-            return studentId;
+            return id;
         } catch (SQLException se) {
             se.printStackTrace();
         }
@@ -121,24 +139,24 @@ public class Database {
         Database data = new Database();
         DBTablePrinter tablePrinter = new DBTablePrinter();
        // data.insertIntoTable("students", "John", 7, 0 ,5000);
-
-        data.establishConnection();
-        try {
-            ResultSet resultSet = data.statement.executeQuery("SELECT * FROM students");
-            data.displayTable("students");
-            //tablePrinter.printTable(data.connection, "students");
-//            int id;
-//            while (resultSet.next()){
-//                id = resultSet.getInt("studentId");
-//                System.out.printf("%d", id);
+        data.insertIntoTeachersTable("teachers", "John", 4, 0, 50000);
+//        data.establishConnection();
+//        try {
+//            ResultSet resultSet = data.statement.executeQuery("SELECT * FROM students");
+//            data.displayTable("students");
+//            //tablePrinter.printTable(data.connection, "students");
+////            int id;
+////            while (resultSet.next()){
+////                id = resultSet.getInt("studentId");
+////                System.out.printf("%d", id);
+////
+////               // System.out.println(resultSet.getString("name"));
+////            }
 //
-//               // System.out.println(resultSet.getString("name"));
-//            }
-
-//            System.out.println(resultSet);
-        }catch (SQLException se){
-            se.printStackTrace();
-        }
+////            System.out.println(resultSet);
+//        }catch (SQLException se){
+//            se.printStackTrace();
+//        }
         //System.out.println(data.getId("Katlyn"));
 
         //data.createTable();
