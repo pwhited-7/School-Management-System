@@ -1,3 +1,5 @@
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -83,11 +85,26 @@ public class Student implements ListInterface{
     }
 
     public boolean verifyStudentIsRegistered(String studentName){
-        for(Student student : studentsList){
-            if(studentName.equalsIgnoreCase(student.getName())){
-                return true;
+
+        try{
+
+            ResultSet resultSet = database.statement.executeQuery("SELECT * FROM students");
+
+            while(resultSet.next()){
+                if(studentName.equalsIgnoreCase(resultSet.getString("name"))){
+                    return true;
+                }
             }
+
+            resultSet.close();
+        }catch (SQLException se){
+            se.printStackTrace();
         }
+//        for(Student student : studentsList){
+//            if(studentName.equalsIgnoreCase(student.getName())){
+//                return true;
+//            }
+//        }
         return false;
     }
 

@@ -137,24 +137,24 @@ public class Database {
         Database data = new Database();
         DBTablePrinter tablePrinter = new DBTablePrinter();
        // data.insertIntoTable("students", "John", 7, 0 ,5000);
-        data.insertIntoTeachersTable("teachers", "John", 4, 0, 50000);
+        //data.insertIntoTeachersTable("teachers", "John", 4, 0, 50000);
 //        data.establishConnection();
-//        try {
-//            ResultSet resultSet = data.statement.executeQuery("SELECT * FROM students");
+        try {
+            ResultSet resultSet = data.statement.executeQuery("SELECT name FROM students WHERE studentId = 1");
+
+            //System.out.println(name);
 //            data.displayTable("students");
 //            //tablePrinter.printTable(data.connection, "students");
 ////            int id;
-////            while (resultSet.next()){
-////                id = resultSet.getInt("studentId");
-////                System.out.printf("%d", id);
-////
-////               // System.out.println(resultSet.getString("name"));
-////            }
+            //while (resultSet.next()){
+                resultSet.next();
+                System.out.println(resultSet.getString("name"));
+           // }
 //
 ////            System.out.println(resultSet);
-//        }catch (SQLException se){
-//            se.printStackTrace();
-//        }
+        }catch (SQLException se){
+            se.printStackTrace();
+        }
         //System.out.println(data.getId("Katlyn"));
 
         //data.createTable();

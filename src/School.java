@@ -1,7 +1,5 @@
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.SQLOutput;
-import java.sql.SQLSyntaxErrorException;
+import javax.xml.crypto.Data;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.lang.*;
@@ -301,19 +299,41 @@ public class School implements ListInterface{
 
         boolean flag = stud.verifyStudentIsRegistered(studentToRemove);
 
-        Student S = null;
         if(flag){
-            for(Student student : studentsList){
-                if(student.getName().equalsIgnoreCase(studentToRemove)){
-                    S = student;
+            try{
+                Connection conn = DriverManager.getConnection("jdbc:mysql://34.106.53.84:3306/school_database", "root", "N43FbN0gADAyIa6k");
+                Statement status = conn.createStatement();
+
+                ResultSet resultSet = status.executeQuery("SELECT * FROM students");
+                while(resultSet.next()){
+                    if(studentToRemove.equalsIgnoreCase(resultSet.getString("name"))){
+                        String sql = String.format("DELETE FROM students WHERE name = \"%s\"", studentToRemove);
+                        database.statement.executeUpdate(sql);
+                        System.out.println(studentToRemove +" has been removed from the database");
+
+                    }
                 }
+                resultSet.close();
+
+            }catch (SQLException se ){
+                se.printStackTrace();
             }
-            studentsList.remove(S);
-            System.out.println(studentToRemove + " has been removed from the school.");
         }
-        else{
-            System.out.println("That student has already been removed or was never registered at this school.");
-        }
+
+
+        //Student S = null;
+//        if(flag){
+//            for(Student student : studentsList){
+//                if(student.getName().equalsIgnoreCase(studentToRemove)){
+//                    S = student;
+//                }
+//            }
+//            studentsList.remove(S);
+//            System.out.println(studentToRemove + " has been removed from the school.");
+//        }
+//        else{
+//            System.out.println("That student has already been removed or was never registered at this school.");
+//        }
     }
 
     public void removeTeacher(){
@@ -473,18 +493,6 @@ public class School implements ListInterface{
         }catch (SQLException se){
             se.printStackTrace();
         }
-
-//        Teacher T = teach.getTeacherById(teacherId);
-//        if(T != null){
-//            System.out.printf("%nTeacher's Information:%n"+
-//                              "Name: %s%n"+
-//                              "Years of Experience: %d%n"+
-//                              "ID: %d%n"+
-//                              "Salary: $%d of $%d has been paid to %s", T.getName(), T.getYearsExperience(), T.getId(), T.getSalaryEarned(), T.getSalary(), T.getName());
-//        }
-//        else{
-//            System.out.println("There is no teacher with that ID.");
-//        }
     }
 
     public int verifyIdIsInteger(){
@@ -516,10 +524,6 @@ public class School implements ListInterface{
             database.displayTable(studentOrTeacher);
         }
     }
-
-
-
-
 
     public static void main(String[] args) {
         updateTotalMoneyEarned(100);
