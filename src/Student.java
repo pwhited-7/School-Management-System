@@ -15,7 +15,6 @@ public class Student implements ListInterface{
     private int gradeLevel;
     private int feesPaid;
     private int feesTotal;
-    Database database = new Database();
     //public List<Student> students = new
     //ArrayList<Student>(100);
    // School school = new School();

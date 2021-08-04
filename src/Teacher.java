@@ -1,3 +1,5 @@
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,11 +85,26 @@ public class Teacher implements ListInterface{
     }
 
     public boolean verifyTeacherIsRegistered(String teacherToVerify){
-        for(Teacher teacher : teachersList){
-            if(teacherToVerify.equalsIgnoreCase(teacher.getName())){
-                return true;
+
+        try{
+            ResultSet resultSet = database.statement.executeQuery("SELECT * FROM teachers");
+
+            while(resultSet.next()){
+                if(teacherToVerify.equalsIgnoreCase(resultSet.getString("name"))){
+                    return true;
+                }
             }
+
+            resultSet.close();
+        }catch (SQLException se){
+            se.printStackTrace();
         }
+
+//        for(Teacher teacher : teachersList){
+//            if(teacherToVerify.equalsIgnoreCase(teacher.getName())){
+//                return true;
+//            }
+//        }
         return false;
     }
 

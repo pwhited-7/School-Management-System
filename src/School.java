@@ -299,66 +299,50 @@ public class School implements ListInterface{
 
         boolean flag = stud.verifyStudentIsRegistered(studentToRemove);
 
-        if(flag){
-            try{
-                Connection conn = DriverManager.getConnection("jdbc:mysql://34.106.53.84:3306/school_database", "root", "N43FbN0gADAyIa6k");
-                Statement status = conn.createStatement();
+        if(flag)
+            studentTeacherRemoverHelper("students", studentToRemove);
 
-                ResultSet resultSet = status.executeQuery("SELECT * FROM students");
-                while(resultSet.next()){
-                    if(studentToRemove.equalsIgnoreCase(resultSet.getString("name"))){
-                        String sql = String.format("DELETE FROM students WHERE name = \"%s\"", studentToRemove);
-                        database.statement.executeUpdate(sql);
-                        System.out.println(studentToRemove +" has been removed from the database");
-
-                    }
-                }
-                resultSet.close();
-
-            }catch (SQLException se ){
-                se.printStackTrace();
-            }
-        }
-
-
-        //Student S = null;
-//        if(flag){
-//            for(Student student : studentsList){
-//                if(student.getName().equalsIgnoreCase(studentToRemove)){
-//                    S = student;
-//                }
-//            }
-//            studentsList.remove(S);
-//            System.out.println(studentToRemove + " has been removed from the school.");
-//        }
-//        else{
-//            System.out.println("That student has already been removed or was never registered at this school.");
-//        }
+        else
+            System.out.println("That student has already been removed or was never registered at this school.");
     }
 
-    public void removeTeacher(){
+    public void removeTeacher() {
 
         String teacherToRemove;
-        do{
+        do {
             System.out.print("Name of the teacher you would like to remove from the school? (Full Name) ");
             teacherToRemove = scnr.nextLine();
-        }while (stringVerification(teacherToRemove));
+        } while (stringVerification(teacherToRemove));
 
         boolean flag = teach.verifyTeacherIsRegistered(teacherToRemove);
-        Teacher T = null;
-        if(flag){
-            for(Teacher teacher : teachersList){
-                if(teacher.getName().equalsIgnoreCase(teacherToRemove)){
-                    T = teacher;
+
+        if (flag)
+            studentTeacherRemoverHelper("teachers", teacherToRemove);
+        else
+            System.out.println("That teacher has already been removed or was never registered at this school. ");
+    }
+
+
+    public void studentTeacherRemoverHelper(String table, String name){
+        try{
+            Connection conn = DriverManager.getConnection("jdbc:mysql://34.106.53.84:3306/school_database", "root", "N43FbN0gADAyIa6k");
+            Statement status = conn.createStatement();
+            String query = String.format("SELECT * FROM %s", table);
+            ResultSet resultSet = status.executeQuery(query);
+            while(resultSet.next()){
+                if(name.equalsIgnoreCase(resultSet.getString("name"))){
+                    String sql = String.format("DELETE FROM %s WHERE name = \"%s\"", table, name);
+                    database.statement.executeUpdate(sql);
+                    System.out.println(name +" has been removed from the database");
                 }
             }
-            teachersList.remove(T);
-            System.out.println(teacherToRemove + " has been removed from the school.");
-        }
-        else{
-            System.out.println("That teacher has already been removed or was never registered at this school. ");
+            resultSet.close();
+
+        }catch (SQLException se ){
+            se.printStackTrace();
         }
     }
+
 
     public void financialsSection(){
 
