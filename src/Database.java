@@ -131,6 +131,19 @@ public class Database {
 
     }
 
+    public ResultSet getResultSet(String table){
+        Database data = new Database();
+        String sql = String.format("SELECT * FROM %s", table);
+        ResultSet resultSet = null;
+        try {
+            resultSet = data.statement.executeQuery(sql);
+
+        }catch (SQLException se){
+            se.printStackTrace();
+        }
+        return resultSet;
+    }
+
 
     public static void main(String[] args) {
 

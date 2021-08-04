@@ -58,12 +58,19 @@ public class Student implements ListInterface{
 
 
 
-    public void checkIfFeesOverPaid(Student S){
-        if(S.getFeesPaid() == 5000){
-            System.out.println("This student has completely paid there fees.");
-        }
-        else if(S.getFeesPaid()> 5000){
-            System.out.println("This student has completely paid there fees and also more then they are required to pay.");
+    public void checkIfFeesOverPaid(String name){
+        ResultSet resultSet = database.getResultSet("students");
+        try{
+            while (resultSet.next()){
+                if(resultSet.getString("name").equalsIgnoreCase(name)){
+                    if(resultSet.getInt("feesPaid") == 5000)
+                        System.out.println("This student has completely paid their fees");
+                    else if(resultSet.getInt("feesPaid") > 5000)
+                        System.out.println("This student has completely paid there fees and also more then they are required to pay.");
+                }
+            }
+        }catch (SQLException se){
+            se.printStackTrace();
         }
     }
 
@@ -99,11 +106,6 @@ public class Student implements ListInterface{
         }catch (SQLException se){
             se.printStackTrace();
         }
-//        for(Student student : studentsList){
-//            if(studentName.equalsIgnoreCase(student.getName())){
-//                return true;
-//            }
-//        }
         return false;
     }
 

@@ -263,13 +263,23 @@ public class School implements ListInterface{
             System.out.println(studentName + " has currently paid $" + currentFeesPaid + " out of the $5000 owed.");
 
             int feesToPay = stud.getFeesToPay();
+            int totalFeesPaid = 0;
 
-            Student S = stud.getStudentObject(studentName);
+            String sqlUpdate = String.format("UPDATE students SET feesPaid = feesPaid + %d WHERE name = \"%s\"", feesToPay, studentName);
+            try{
+                ResultSet resultSet = database.getResultSet("students");
+                while (resultSet.next()){
+                    if(resultSet.getString("name").equalsIgnoreCase(studentName)){
+                        totalFeesPaid = feesToPay + resultSet.getInt("feesPaid");
+                        database.statement.executeUpdate(sqlUpdate);
+                    }
+                }
+            }catch (SQLException se){
+                se.printStackTrace();
+            }
+            stud.checkIfFeesOverPaid(studentName);
 
-            S.payFees(feesToPay);
-            stud.checkIfFeesOverPaid(S);
-
-            System.out.println(studentName + " now has paid: $" + S.getFeesPaid() + " out of the $5000 owed.");
+            System.out.println(studentName + " now has paid: $" + totalFeesPaid + " out of the $5000 owed.");
         }
 
     }
@@ -277,14 +287,18 @@ public class School implements ListInterface{
     public int getCurrentFeesPaid(String studentName){
         int studentFees = 0;
 
-        for(Student student : studentsList){
-            if(student.getName().equalsIgnoreCase(studentName)){
-                studentFees = student.getFeesPaid();
+        try{
+            ResultSet resultSet = database.statement.executeQuery("SELECT * FROM students");
+            while (resultSet.next()){
+                if(resultSet.getString("name").equalsIgnoreCase(studentName)){
+                    studentFees = resultSet.getInt("feesPaid");
+                }
             }
-            else{
-                return 0;
-            }
+
+        }catch (SQLException se){
+            se.printStackTrace();
         }
+
         return studentFees;
     }
 
@@ -510,10 +524,13 @@ public class School implements ListInterface{
     }
 
     public static void main(String[] args) {
-        updateTotalMoneyEarned(100);
-        updateTotalMoneySpent(200);
-        System.out.println(totalMoneyEarned);
-        System.out.println(totalMoneySpent);
+        School sc = new School();
+//        updateTotalMoneyEarned(100);
+//        updateTotalMoneySpent(200);
+//        System.out.println(totalMoneyEarned);
+//        System.out.println(totalMoneySpent);
+
+        System.out.println(sc.getCurrentFeesPaid("Pacen Whited"));
     }
 
 }
