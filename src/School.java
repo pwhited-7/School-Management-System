@@ -1,7 +1,4 @@
-import javax.xml.crypto.Data;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.lang.*;
 import java.util.Random;
 import java.util.Scanner;
@@ -16,7 +13,7 @@ public class School implements ListInterface{
     Scanner scnr = new Scanner(System.in);
     Teacher teach = new Teacher();
     Student stud = new Student();
-    Database database = new Database();
+    //Database database = new Database();
 
 //    List<Student> studentsList = new ArrayList<>();
 //    List<Teacher> teachersList = new ArrayList<>();
@@ -430,64 +427,76 @@ public class School implements ListInterface{
 
     public void displayStudentInfo(){
 
-        int studentId = verifyIdIsInteger();
-        try {
-            ResultSet resultSet = database.statement.executeQuery("SELECT * FROM students");
+        String studentName = "";
+        do {
+            System.out.print("What is the name of the Student (Full Name) ");
+            studentName = scnr.nextLine();
+        }while (stringVerification(studentName));
 
-            String name;
-            int gradeLevel;
-            int id;
-            int feesPaid;
-            int feesTotal;
-            while (resultSet.next()){
-                if(studentId == resultSet.getInt("studentId")){
-                    name = resultSet.getString("name");
-                    gradeLevel = resultSet.getInt("gradeLevel");
-                    id = resultSet.getInt("studentId");
-                    feesPaid = resultSet.getInt("feesPaid");
-                    feesTotal = resultSet.getInt("feesTotal");
+        if(stud.verifyStudentIsRegistered(studentName))
+            displayInfoHelper("students", studentName);
+        else
+            System.out.printf("%s is not registered in this database.%n", studentName);
 
-                    System.out.printf("%nStudent's Information:%n" +
-                            "Name: %s%n" +
-                            "Grade Level: %d%n" +
-                            "ID: %d%n" +
-                            "Fees Paid: $%d out of $%d%n", name, gradeLevel, id, feesPaid, feesTotal);
-                }
-            }
-
-        }catch (SQLException se){
-            se.printStackTrace();
-        }
     }
 
     public void displayTeacherInfo(){
-        int teacherId = verifyIdIsInteger();
+        String teacherName = "";
+        do {
+            System.out.print("What is the name of the Teacher? (Full Name) ");
+            teacherName = scnr.nextLine();
+        }while (stringVerification(teacherName));
+
+        if(teach.verifyTeacherIsRegistered(teacherName))
+            displayInfoHelper("teachers", teacherName);
+        else
+            System.out.printf("%s is not registered in this database.%n", teacherName);
+
+    }
+
+    public void displayInfoHelper(String table, String name){
 
         try {
-            ResultSet resultSet = database.statement.executeQuery("SELECT * FROM teachers");
+            String querySql = String.format("SELECT * FROM %s", table);
+            ResultSet resultSet = database.statement.executeQuery(querySql);
 
-            String name;
-            int yearsExperience;
-            int id;
-            int salary;
-            int salaryEarned;
+            //String name;
+            int experienceOrGradeLevel = 0;
+            int id = 0;
+            int salaryOrFeesTotal = 0;
+            int salaryEarnedOrFeesPaid = 0;
+            String studentOrTeacher ="";
+            String gradeLevelOrExperience = "";
+            String salaryOrFeesString = "";
 
             while (resultSet.next()){
-                if(teacherId == resultSet.getInt("teacherId")){
-                    name = resultSet.getString("name");
-                    yearsExperience = resultSet.getInt("yearsExperience");
-                    id = resultSet.getInt("teacherId");
-                    salaryEarned = resultSet.getInt("salaryEarned");
-                    salary = resultSet.getInt("salary");
-
-                    System.out.printf("%nTeacher's Information:%n" +
-                            "Name: %s%n" +
-                            "Year's Experience: %d%n" +
-                            "ID: %d%n" +
-                            "Salary: $%d of $%d has been paid to %s%n", name, yearsExperience, id, salaryEarned, salary, name);
+                if(name.equalsIgnoreCase(resultSet.getString("name"))){
+                    //name = resultSet.getString("name");
+                    if(table.equals("teachers")) {
+                        experienceOrGradeLevel = resultSet.getInt("yearsExperience");
+                        id = resultSet.getInt("teacherId");
+                        salaryEarnedOrFeesPaid = resultSet.getInt("salaryEarned");
+                        salaryOrFeesTotal = resultSet.getInt("salary");
+                        studentOrTeacher = "Teacher's";
+                        gradeLevelOrExperience = "Year's Experience";
+                        salaryOrFeesString = "Salary";
+                    }
+                    else if(table.equals("students")) {
+                        experienceOrGradeLevel = resultSet.getInt("gradeLevel");
+                        id = resultSet.getInt("studentId");
+                        salaryEarnedOrFeesPaid = resultSet.getInt("feesPaid");
+                        salaryOrFeesTotal = resultSet.getInt("feesTotal");
+                        studentOrTeacher = "Student's";
+                        gradeLevelOrExperience = "Grade Level";
+                        salaryOrFeesString = "Fees Paid";
+                    }
                 }
             }
-
+            System.out.printf("%n%s Information:%n" +
+                    "Name: %s%n" +
+                    "%s: %d%n" +
+                    "ID: %d%n" +
+                    "%s: $%d of $%d has been paid to %s%n", studentOrTeacher, name, gradeLevelOrExperience, experienceOrGradeLevel ,id, salaryOrFeesString ,salaryEarnedOrFeesPaid, salaryOrFeesTotal, name);
         }catch (SQLException se){
             se.printStackTrace();
         }
