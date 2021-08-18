@@ -240,63 +240,39 @@ public class School implements ListInterface{
         return experience;
     }
 
-    public void payStudentFees(){
-        String studentName;
-
-        do {
-            System.out.print("Who would you like to pay fees for? (Full Name) ");
-            studentName = scnr.nextLine();
-
-        }while (stringVerification(studentName));
-
-        boolean flag = stud.verifyStudentIsRegistered(studentName);
 
 
-        if(!flag){
-            System.out.println("Student is not enrolled");
-        }
-        else {
-            int currentFeesPaid = getCurrentFeesPaid(studentName);
-            System.out.println(studentName + " has currently paid $" + currentFeesPaid + " out of the $5000 owed.");
-
-            int feesToPay = stud.getFeesToPay();
-            int totalFeesPaid = 0;
-
-            String sqlUpdate = String.format("UPDATE students SET feesPaid = feesPaid + %d WHERE name = \"%s\"", feesToPay, studentName);
-            try{
-                ResultSet resultSet = database.getResultSet("students");
-                while (resultSet.next()){
-                    if(resultSet.getString("name").equalsIgnoreCase(studentName)){
-                        totalFeesPaid = feesToPay + resultSet.getInt("feesPaid");
-                        database.statement.executeUpdate(sqlUpdate);
-                    }
-                }
-            }catch (SQLException se){
-                se.printStackTrace();
-            }
-            stud.checkIfFeesOverPaid(studentName);
-
-            System.out.println(studentName + " now has paid: $" + totalFeesPaid + " out of the $5000 owed.");
-        }
-
-    }
-
-    public int getCurrentFeesPaid(String studentName){
-        int studentFees = 0;
-
+    public int getCurrentFeesPaid(String studentOrTeacherName, String table, String query ){
+        int feesOrSalaryPaid = 0;
         try{
-            ResultSet resultSet = database.statement.executeQuery("SELECT * FROM students");
+            String sql = String.format("SELECT * FROM %s", table);
+            ResultSet resultSet = database.statement.executeQuery(sql);
             while (resultSet.next()){
-                if(resultSet.getString("name").equalsIgnoreCase(studentName)){
-                    studentFees = resultSet.getInt("feesPaid");
+                if(resultSet.getString("name").equalsIgnoreCase(studentOrTeacherName)){
+                    feesOrSalaryPaid = resultSet.getInt(query);
                 }
             }
-
         }catch (SQLException se){
             se.printStackTrace();
         }
+        return feesOrSalaryPaid;
 
-        return studentFees;
+
+//        int studentFees = 0;
+//
+//        try{
+//            ResultSet resultSet = database.statement.executeQuery("SELECT * FROM students");
+//            while (resultSet.next()){
+//                if(resultSet.getString("name").equalsIgnoreCase(studentName)){
+//                    studentFees = resultSet.getInt("feesPaid");
+//                }
+//            }
+//
+//        }catch (SQLException se){
+//            se.printStackTrace();
+//        }
+//
+//        return studentFees;
     }
 
     public void removeStudent(){
@@ -398,25 +374,88 @@ public class School implements ListInterface{
         return decision;
     }
 
+    public void payStudentFees(){
+        String studentName;
+
+        do {
+            System.out.print("Who would you like to pay fees for? (Full Name) ");
+            studentName = scnr.nextLine();
+
+        }while (stringVerification(studentName));
+
+        boolean flag = stud.verifyStudentIsRegistered(studentName);
+
+        payFeesHelper("students", studentName, "Student", flag);
+
+    }
+
     public void payTeacherSalary(){
 
-        String teacherToPay;
-        do{
-            System.out.print("Who's salary would you like to pay? (Full Name) ");
-            teacherToPay = scnr.nextLine();
-        }while (stringVerification(teacherToPay));
+        String teacherName;
 
-        boolean teacherVerification = teach.verifyTeacherIsRegistered(teacherToPay);
-        if(teacherVerification){
-            Teacher foundTeacher = teach.getTeacher(teacherToPay);
-            System.out.println(foundTeacher.getName() + " has been paid $" + foundTeacher.getSalaryEarned() + " of their $" + foundTeacher.getSalary() + " salary.");
-            System.out.print("How much of " + foundTeacher.getName() + "'s salary would you like to pay? ");
-            int salaryToPay = scnr.nextInt();
-            foundTeacher.receiveSalary(salaryToPay);
-            System.out.println(foundTeacher.getName() +" has now been paid $" + foundTeacher.getSalaryEarned() + " of their $" + foundTeacher.getSalary() + " salary.");
+        do {
+            System.out.print("Who's salary would you like to pay? (Full Name) ");
+            teacherName = scnr.nextLine();
+
+        }while (stringVerification(teacherName));
+
+        boolean flag = teach.verifyTeacherIsRegistered(teacherName);
+
+        payFeesHelper("teachers", teacherName, "teacher", flag);
+
+    }
+
+    public void payFeesHelper(String table, String name, String studentOrTeacher, boolean flag){
+        String feesPaid = "feesPaid";
+        String feesTotal = "feesTotal";
+        String salary = "salary";
+        String salaryEarned = "salaryEarned";
+        String sqlUpdate = "";
+        int totalFeesPaid = 0;
+
+        if(!flag){
+            System.out.println( studentOrTeacher + " is not in the database");
         }
-        else{
-            System.out.println("This teacher was not found in the system.");
+        else {
+            if(studentOrTeacher.equalsIgnoreCase("Student")) {
+                int currentFeesPaid = getCurrentFeesPaid(name, table, feesPaid);
+                System.out.println(name + " has currently paid $" + currentFeesPaid + " out of the $5000 owed.");
+                int feesToPay = stud.getFeesToPay();
+                sqlUpdate = String.format("UPDATE students SET feesPaid = feesPaid + %d WHERE name = \"%s\"", feesToPay, name);
+                try {
+                    ResultSet resultSet = database.getResultSet("students");
+                    while (resultSet.next()) {
+                        if (resultSet.getString("name").equalsIgnoreCase(name)) {
+                            totalFeesPaid = feesToPay + resultSet.getInt(feesPaid);
+                            database.statement.executeUpdate(sqlUpdate);
+                        }
+                    }
+                } catch (SQLException se) {
+                    se.printStackTrace();
+                }
+                stud.checkIfFeesOverPaid(name);
+
+                System.out.println(name + " now has paid: $" + totalFeesPaid + " out of the $5000 owed.");
+            }
+            else if(studentOrTeacher.equalsIgnoreCase("teacher")){
+                int salaryPaid = getCurrentFeesPaid(name, "teachers", "salaryEarned");
+                int salaryTotal = teach.getTeacherSalary(name);
+                System.out.printf("%s has been paid $%d of their $%d salary.%n", name, salaryPaid, salaryTotal);
+                int salaryToPay = stud.getFeesToPay();
+                sqlUpdate = String.format("UPDATE teachers SET salaryEarned = salaryEarned + %d WHERE name = \"%s\"", salaryToPay, name);
+                try{
+                    ResultSet resultSet = database.getResultSet("teachers");
+                    while (resultSet.next()){
+                        if(resultSet.getString("name").equalsIgnoreCase(name)){
+                            totalFeesPaid = salaryToPay + resultSet.getInt("salaryEarned");
+                            database.statement.executeUpdate(sqlUpdate);
+                        }
+                    }
+                }catch (SQLException se){
+                    se.printStackTrace();
+                }
+                System.out.printf("%s has now been paid $%d of their $%d salary%n", name, totalFeesPaid, salaryTotal);
+            }
         }
 
     }
@@ -539,7 +578,10 @@ public class School implements ListInterface{
 //        System.out.println(totalMoneyEarned);
 //        System.out.println(totalMoneySpent);
 
-        System.out.println(sc.getCurrentFeesPaid("Pacen Whited"));
+        //System.out.println(sc.getCurrentFeesPaid("Pacen Whited"));
+        //System.out.println(sc.getCurrentFeesPaid("Pacen Whited", "students", "feesPaid"));
+        sc.payTeacherSalary();
+        // sc.payStudentFees();
     }
 
 }

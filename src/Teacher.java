@@ -88,23 +88,15 @@ public class Teacher implements ListInterface{
 
         try{
             ResultSet resultSet = database.statement.executeQuery("SELECT * FROM teachers");
-
             while(resultSet.next()){
                 if(teacherToVerify.equalsIgnoreCase(resultSet.getString("name"))){
                     return true;
                 }
             }
-
             resultSet.close();
         }catch (SQLException se){
             se.printStackTrace();
         }
-
-//        for(Teacher teacher : teachersList){
-//            if(teacherToVerify.equalsIgnoreCase(teacher.getName())){
-//                return true;
-//            }
-//        }
         return false;
     }
 
@@ -127,6 +119,22 @@ public class Teacher implements ListInterface{
         return T;
     }
 
+    public int getTeacherSalary(String name){
+        int salary = 0;
+
+        try{
+            ResultSet resultSet = database.getResultSet("teachers");
+            while (resultSet.next()){
+                if(resultSet.getString("name").equalsIgnoreCase(name)){
+                    salary = resultSet.getInt("salary");
+                }
+            }
+        }catch (SQLException se){
+            se.printStackTrace();
+        }
+
+        return salary;
+    }
 
     @Override
     public String toString() {
@@ -134,13 +142,13 @@ public class Teacher implements ListInterface{
     }
 
     public static void main(String[] args) {
-        Teacher T = new Teacher(4, "Pacen", 4);
-        Teacher T1 = new Teacher(5, "John", 4);
+//        Teacher T = new Teacher(4, "Pacen", 4);
+//        Teacher T1 = new Teacher(5, "John", 4);
         School sch = new School();
-        sch.addTeacher(T);
-        sch.addTeacher(T1);
+        Teacher T = new Teacher();
         T.receiveSalary(400);
-        sch.getTeachers();
+        //sch.getTeachers();
+        System.out.println(T.getTeacherSalary("Wil"));
     }
 
 
