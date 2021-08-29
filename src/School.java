@@ -390,7 +390,6 @@ public class School implements ListInterface{
     }
 
     public void payTeacherSalary(){
-
         String teacherName;
 
         do {
@@ -504,9 +503,6 @@ public class School implements ListInterface{
             int id = 0;
             int salaryOrFeesTotal = 0;
             int salaryEarnedOrFeesPaid = 0;
-            String studentOrTeacher ="";
-            String gradeLevelOrExperience = "";
-            String salaryOrFeesString = "";
 
             while (resultSet.next()){
                 if(name.equalsIgnoreCase(resultSet.getString("name"))){
@@ -516,26 +512,31 @@ public class School implements ListInterface{
                         id = resultSet.getInt("teacherId");
                         salaryEarnedOrFeesPaid = resultSet.getInt("salaryEarned");
                         salaryOrFeesTotal = resultSet.getInt("salary");
-                        studentOrTeacher = "Teacher's";
-                        gradeLevelOrExperience = "Year's Experience";
-                        salaryOrFeesString = "Salary";
+
+                        System.out.printf("""
+                                          %nTeacher's Information:
+                                          Name: %s
+                                          Year's Experience: %d
+                                          ID: %d
+                                          Salary: $%d of $%d has been paid to %s.
+                                          """, name, experienceOrGradeLevel, id, salaryEarnedOrFeesPaid, salaryOrFeesTotal, name);
                     }
                     else if(table.equals("students")) {
                         experienceOrGradeLevel = resultSet.getInt("gradeLevel");
                         id = resultSet.getInt("studentId");
                         salaryEarnedOrFeesPaid = resultSet.getInt("feesPaid");
                         salaryOrFeesTotal = resultSet.getInt("feesTotal");
-                        studentOrTeacher = "Student's";
-                        gradeLevelOrExperience = "Grade Level";
-                        salaryOrFeesString = "Fees Paid";
+
+                        System.out.printf("""
+                                            %nStudent's Information:
+                                            Name: %s
+                                            Grade: %d
+                                            ID: %d
+                                            Fees Paid: %s has paid $%d of their $%d balance.
+                                            """, name, experienceOrGradeLevel, id, name, salaryEarnedOrFeesPaid, salaryOrFeesTotal);
                     }
                 }
             }
-            System.out.printf("%n%s Information:%n" +
-                    "Name: %s%n" +
-                    "%s: %d%n" +
-                    "ID: %d%n" +
-                    "%s: $%d of $%d has been paid to %s%n", studentOrTeacher, name, gradeLevelOrExperience, experienceOrGradeLevel ,id, salaryOrFeesString ,salaryEarnedOrFeesPaid, salaryOrFeesTotal, name);
         }catch (SQLException se){
             se.printStackTrace();
         }
