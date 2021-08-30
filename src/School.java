@@ -18,6 +18,9 @@ public class School implements ListInterface{
 //    List<Student> studentsList = new ArrayList<>();
 //    List<Teacher> teachersList = new ArrayList<>();
 
+    public School(){
+
+    }
 
     public void getTeachers() {
         for(Teacher teacher : teachersList){
@@ -71,15 +74,34 @@ public class School implements ListInterface{
      * @return the total money earned by the school.
      */
     public int getTotalMoneyEarned() {
+
+        ResultSet resultSet = database.getResultSet("school");
+
+        try{
+            resultSet.next();
+            totalMoneyEarned = resultSet.getInt("totalMoneyEarned");
+
+        }catch (SQLException se){
+            se.printStackTrace();
+        }
+
         return totalMoneyEarned;
     }
 
     /**
      * Adds the total money earned by the school.
-     * @param MoneyEarned money that is supposed to be  added.
+     * @param moneyEarned money that is supposed to be  added.
      */
-    public static void updateTotalMoneyEarned(int MoneyEarned) {
-        totalMoneyEarned += MoneyEarned;
+    public static void updateTotalMoneyEarned(int moneyEarned) {
+        String updateMoney = String.format("UPDATE school set totalMoneyEarned = totalMoneyEarned + %d", moneyEarned);
+        try{
+
+            database.statement.executeUpdate(updateMoney);
+
+        }catch (SQLException se){
+            se.printStackTrace();
+        }
+
     }
 
     /**
@@ -96,7 +118,7 @@ public class School implements ListInterface{
      * @param moneySpent the money spent by school.
      */
     public static void updateTotalMoneySpent(int moneySpent) {
-        totalMoneyEarned-=moneySpent;
+        //totalMoneyEarned-=moneySpent;
     }
 
     public void createStudent()  {
@@ -344,12 +366,6 @@ public class School implements ListInterface{
         else if(numberDecision == 3){
             displaySchoolEarnings();
         }
-        else if(numberDecision == 4){
-            getStudents();
-        }
-        else if(numberDecision == 5){
-            getTeachers();
-        }
 
     }
 
@@ -581,7 +597,10 @@ public class School implements ListInterface{
 
         //System.out.println(sc.getCurrentFeesPaid("Pacen Whited"));
         //System.out.println(sc.getCurrentFeesPaid("Pacen Whited", "students", "feesPaid"));
-        sc.payTeacherSalary();
+        //sc.updateTotalMoneyEarned(1);
+        System.out.println(sc.totalMoneyEarned);
+        sc.updateTotalMoneyEarned(1);
+        System.out.println(sc.totalMoneyEarned);
         // sc.payStudentFees();
     }
 

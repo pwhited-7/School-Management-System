@@ -36,8 +36,6 @@ public class Display {
                 1 - pay student fees
                 2 - pay teachers their salary
                 3 - shows how much money the school has made
-                4 - display all students and how much of their fees have been paid
-                5 - display all teachers and how much of their salary has been paid
                 """);
     }
 
