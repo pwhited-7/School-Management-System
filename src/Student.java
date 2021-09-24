@@ -1,24 +1,14 @@
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
-/*
- * This class is responsible for keeping
- * track of students id, fees, name & grades
- *
- * */
+
 public class Student implements ListInterface{
     private int id;
     private String name;
     private int gradeLevel;
     private int feesPaid;
     private int feesTotal;
-    //public List<Student> students = new
-    //ArrayList<Student>(100);
-   // School school = new School();
-
 
     /**
      * Create a new student by initializing,
@@ -38,34 +28,17 @@ public class Student implements ListInterface{
     }
     public Student(){ }
 
-    public int getGradeLevel() {
-        return gradeLevel;
-    }
-
-    public void setGradeLevel(int gradeLevel) {
-        this.gradeLevel = gradeLevel;
-    }
-
-    public void setId(int id){
-        this.id = id;
-    }
-
-    public void payFees(int fees){
-        feesPaid += fees;
-        database.updateStudentFeesPaid(feesPaid, this.name);
-        School.updateTotalMoneyEarned(feesPaid);
-    }
-
-
-
+    /**
+     * Checks if a student has paid more than they owe
+     * */
     public void checkIfFeesOverPaid(String name){
         ResultSet resultSet = database.getResultSet("students");
         try{
             while (resultSet.next()){
                 if(resultSet.getString("name").equalsIgnoreCase(name)){
-                    if(resultSet.getInt("feesPaid") == 5000)
+                    if(resultSet.getInt("feesPaid") == 10000)
                         System.out.println("This student has completely paid their fees");
-                    else if(resultSet.getInt("feesPaid") > 5000)
+                    else if(resultSet.getInt("feesPaid") > 10000)
                         System.out.println("This student has completely paid there fees and also more then they are required to pay.");
                 }
             }
@@ -74,21 +47,6 @@ public class Student implements ListInterface{
         }
     }
 
-    public int getFeesPaid(){
-        return feesPaid;
-    }
-
-    public int getId(){
-        return id;
-    }
-
-    public String getName(){
-        return name;
-    }
-
-    public int getFeesTotal(){
-        return feesTotal;
-    }
 
     public boolean verifyStudentIsRegistered(String studentName){
 
@@ -129,36 +87,6 @@ public class Student implements ListInterface{
         }
         while(flag);
         return n;
-    }
-
-    public Student getStudentObject(String studentName){
-
-        for(Student student : studentsList){
-            if(student.getName().equalsIgnoreCase(studentName)){
-
-                return student;
-            }
-            else
-                System.out.println("This student is not registered.");
-        }
-        return null;
-    }
-
-    public Student getStudentById(int id){
-        Student S = null;
-        for(Student student: studentsList){
-            if(id == student.getId()){
-                S = student;
-            }
-        }
-        return S;
-    }
-
-    /**
-     * @return the remaining fees.
-     */
-    public int getRemainingTotal(){
-        return feesTotal - feesPaid;
     }
 
     @Override

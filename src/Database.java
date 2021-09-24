@@ -1,4 +1,3 @@
-import javax.xml.crypto.Data;
 import java.sql.*;
 
 
@@ -6,7 +5,6 @@ public class Database {
 
     public Connection connection = null;
     public Statement statement = null;
-    //DBTablePrinter tablePrinter = new DBTablePrinter();
 
     public Database(){
         try {

@@ -1,5 +1,3 @@
-import java.sql.SQLException;
-import java.sql.SQLSyntaxErrorException;
 import java.util.*;
 
 public class Controller extends School{

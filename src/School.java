@@ -4,61 +4,13 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class School implements ListInterface{
-    private static int  totalMoneyEarned = 0;
-    private static int totalMoneySpent = 0;
-    private static int studentIdCounter = 0;
-    private static int teacherIdCounter = 0;
 
-    Random rand = new Random();
     Scanner scnr = new Scanner(System.in);
     Teacher teach = new Teacher();
     Student stud = new Student();
-    //Database database = new Database();
-
-//    List<Student> studentsList = new ArrayList<>();
-//    List<Teacher> teachersList = new ArrayList<>();
 
     public School(){
 
-    }
-
-    public void getTeachers() {
-        for(Teacher teacher : teachersList){
-            System.out.println(teacher);
-        }
-
-        if(teachersList.size() == 0){
-            System.out.println("There are no teachers registered.");
-        }
-        else if(teachersList.size() == 1) {
-            System.out.printf("There is %d teacher registered\n", teachersList.size());
-        }
-        else{
-            System.out.printf("There are %d teachers registered\n", teachersList.size());
-        }
-    }
-
-    /**
-     * Adds a teacher to the school.
-     * @param teacher the teacher to be added.
-     */
-    public void addTeacher(Teacher teacher) {
-        teachersList.add(teacher);
-    }
-
-    public void getStudents() {
-        for(Student student : studentsList){
-            System.out.println(student);
-        }
-        if(studentsList.size() == 0){
-            System.out.println("There are no students registered.");
-        }
-        else if(studentsList.size() == 1) {
-            System.out.printf("There is %d student registered\n", studentsList.size());
-        }
-        else{
-            System.out.printf("There are %d students registered\n", studentsList.size());
-        }
     }
 
     /**
@@ -74,18 +26,18 @@ public class School implements ListInterface{
      * @return the total money earned by the school.
      */
     public int getTotalMoneyEarned() {
-
+        int moneyEarned = 0;
         ResultSet resultSet = database.getResultSet("school");
 
         try{
             resultSet.next();
-            totalMoneyEarned = resultSet.getInt("totalMoneyEarned");
+            moneyEarned = resultSet.getInt("totalMoneyEarned");
 
         }catch (SQLException se){
             se.printStackTrace();
         }
 
-        return totalMoneyEarned;
+        return moneyEarned;
     }
 
     /**
@@ -95,21 +47,10 @@ public class School implements ListInterface{
     public static void updateTotalMoneyEarned(int moneyEarned) {
         String updateMoney = String.format("UPDATE school set totalMoneyEarned = totalMoneyEarned + %d", moneyEarned);
         try{
-
             database.statement.executeUpdate(updateMoney);
-
         }catch (SQLException se){
             se.printStackTrace();
         }
-
-    }
-
-    /**
-     *
-     * @return the total money spent by the school.
-     */
-    public int getTotalMoneySpent() {
-        return totalMoneySpent;
     }
 
     /**
@@ -121,6 +62,11 @@ public class School implements ListInterface{
         //totalMoneyEarned-=moneySpent;
     }
 
+    /**
+     * Creates a student and adds them to the database.
+     * Asks user for name and grade level.
+     * Student ID is chosen by database
+     * */
     public void createStudent()  {
 
         //Getting Name of Student
@@ -140,7 +86,7 @@ public class School implements ListInterface{
                 gradeLevel = correctGradeValue();
             }
         }
-        database.insertIntoStudentsTable("students", studentName, gradeLevel, 0, 5000);
+        database.insertIntoStudentsTable("students", studentName, gradeLevel, 0, 10000);
 
         //Assign student ID which is created automatically by database
         int id = assignStudentId(studentName);
@@ -176,7 +122,6 @@ public class School implements ListInterface{
                 flag=false;
             }
             catch(Exception e) {
-                // accept integer only.
                 System.out.println("This is not an accepted value.");
                 flag=true;
             }
@@ -185,6 +130,13 @@ public class School implements ListInterface{
         return n;
     }
 
+
+    /**
+     * Creates a teacher and add them to the database.
+     * Asks user for name, years of experience.
+     * Uses salaryNegotiation() method to decide salary
+     * ID assigned by database
+     * */
     public void createTeacher(){
         System.out.print("Teacher Name: ");
         String teacherName = scnr.nextLine();
@@ -193,8 +145,7 @@ public class School implements ListInterface{
             System.out.print("Teacher Name: ");
             teacherName = scnr.nextLine();
         }
-
-        //Getting Grade Level
+        //Getting years experience
         int yearsExperience = getYearsExperience();
         int salary = teach.salaryNegotiation(yearsExperience);
         System.out.println("Yearly salary is $" + salary);
@@ -225,20 +176,6 @@ public class School implements ListInterface{
         return false;
     }
 
-    public int assignTeacherId(){
-        teacherIdCounter += 1;
-        // int id = rand.nextInt( 100) + 1;
-//        for(Student a : studentsList){
-//            int studentID = a.getId();
-
-//            while(studentID == id) {
-//                id = rand.nextInt(100) + 1;
-//            }
-        //}
-        System.out.print("The teacher has been giving the ID: " + teacherIdCounter);
-        return teacherIdCounter;
-
-    }
 
     public int getYearsExperience(){
 
@@ -279,22 +216,6 @@ public class School implements ListInterface{
         }
         return feesOrSalaryPaid;
 
-
-//        int studentFees = 0;
-//
-//        try{
-//            ResultSet resultSet = database.statement.executeQuery("SELECT * FROM students");
-//            while (resultSet.next()){
-//                if(resultSet.getString("name").equalsIgnoreCase(studentName)){
-//                    studentFees = resultSet.getInt("feesPaid");
-//                }
-//            }
-//
-//        }catch (SQLException se){
-//            se.printStackTrace();
-//        }
-//
-//        return studentFees;
     }
 
     public void removeStudent(){
@@ -372,7 +293,6 @@ public class School implements ListInterface{
     public int selectFinancialOption(){
         int decision = 0;
         boolean flag;
-
         do {
             try {
                 Scanner sc = new Scanner(System.in);
@@ -381,7 +301,6 @@ public class School implements ListInterface{
                 flag=false;
             }
             catch(Exception e) {
-                // accept integer only.
                 System.out.println("This is not an accepted value.");
                 flag=true;
             }
@@ -422,10 +341,8 @@ public class School implements ListInterface{
 
     public void payFeesHelper(String table, String name, String studentOrTeacher, boolean flag){
         String feesPaid = "feesPaid";
-        String feesTotal = "feesTotal";
-        String salary = "salary";
-        String salaryEarned = "salaryEarned";
         String sqlUpdate = "";
+        String earningsUpdate = "";
         int totalFeesPaid = 0;
 
         if(!flag){
@@ -437,12 +354,14 @@ public class School implements ListInterface{
                 System.out.println(name + " has currently paid $" + currentFeesPaid + " out of the $5000 owed.");
                 int feesToPay = stud.getFeesToPay();
                 sqlUpdate = String.format("UPDATE students SET feesPaid = feesPaid + %d WHERE name = \"%s\"", feesToPay, name);
+                earningsUpdate = String.format("UPDATE school set totalMoneyEarned = totalMoneyEarned + %d", feesToPay);
                 try {
                     ResultSet resultSet = database.getResultSet("students");
                     while (resultSet.next()) {
                         if (resultSet.getString("name").equalsIgnoreCase(name)) {
                             totalFeesPaid = feesToPay + resultSet.getInt(feesPaid);
                             database.statement.executeUpdate(sqlUpdate);
+                            database.statement.executeUpdate(earningsUpdate);
                         }
                     }
                 } catch (SQLException se) {
@@ -458,12 +377,14 @@ public class School implements ListInterface{
                 System.out.printf("%s has been paid $%d of their $%d salary.%n", name, salaryPaid, salaryTotal);
                 int salaryToPay = stud.getFeesToPay();
                 sqlUpdate = String.format("UPDATE teachers SET salaryEarned = salaryEarned + %d WHERE name = \"%s\"", salaryToPay, name);
+                earningsUpdate = String.format("UPDATE school set totalMoneyEarned = totalMoneyEarned - %d", salaryToPay);
                 try{
                     ResultSet resultSet = database.getResultSet("teachers");
                     while (resultSet.next()){
                         if(resultSet.getString("name").equalsIgnoreCase(name)){
                             totalFeesPaid = salaryToPay + resultSet.getInt("salaryEarned");
                             database.statement.executeUpdate(sqlUpdate);
+                            database.statement.executeUpdate(earningsUpdate);
                         }
                     }
                 }catch (SQLException se){
@@ -476,7 +397,7 @@ public class School implements ListInterface{
     }
 
     public void displaySchoolEarnings(){
-        System.out.printf("The school has earned $%d\n", getTotalMoneyEarned());
+        System.out.printf("%nThe school has earned $%d\n", getTotalMoneyEarned());
     }
 
     public void displayStudentInfo(){
@@ -597,10 +518,10 @@ public class School implements ListInterface{
 
         //System.out.println(sc.getCurrentFeesPaid("Pacen Whited"));
         //System.out.println(sc.getCurrentFeesPaid("Pacen Whited", "students", "feesPaid"));
-        //sc.updateTotalMoneyEarned(1);
-        System.out.println(sc.totalMoneyEarned);
         sc.updateTotalMoneyEarned(1);
-        System.out.println(sc.totalMoneyEarned);
+        System.out.println(sc.getTotalMoneyEarned());
+
+
         // sc.payStudentFees();
     }
 

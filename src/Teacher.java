@@ -9,7 +9,6 @@ public class Teacher implements ListInterface{
     private int salary;
     private int salaryEarned;
     private int yearsExperience;
-    //public List<Teacher> teachers = new ArrayList<Teacher>(100);
 
     public Teacher(int id, String name, int yearsExperience) {
         this.id = id;
@@ -30,21 +29,10 @@ public class Teacher implements ListInterface{
         return name;
     }
 
-    public int getSalary(){
-        return  salary;
-    }
-
-    public int getSalaryEarned(){
-        return salaryEarned;
-    }
-
     public void setSalary(int salary){
         this.salary=salary;
     }
 
-    public int getYearsExperience(){
-        return yearsExperience;
-    }
 
     /**
      * Adds  to salaryEarned.
@@ -100,24 +88,6 @@ public class Teacher implements ListInterface{
         return false;
     }
 
-    public Teacher getTeacher(String teacherName){
-        for(Teacher teach : teachersList){
-            if(teach.getName().equalsIgnoreCase(teacherName)){
-                return teach;
-            }
-        }
-        return null;
-    }
-
-    public Teacher getTeacherById(int id){
-        Teacher T = null;
-        for(Teacher teacher: teachersList){
-            if(id == teacher.getId()){
-                T = teacher;
-            }
-        }
-        return T;
-    }
 
     public int getTeacherSalary(String name){
         int salary = 0;
